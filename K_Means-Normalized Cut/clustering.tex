@@ -1,0 +1,1055 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{\textbf{Pattern Recognition\\Lab 2}}
+\author{\textbf{Ziad Reda Saad - 19015717}\and \textbf{Ali Mones Abd El-Mohsen - 20010946}\and \textbf{Marwan Mostafa Abd El-Kader - 20011867}}
+
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{torch}
+\PY{k+kn}{from} \PY{n+nn}{torch} \PY{k+kn}{import} \PY{n}{Tensor}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{decomposition} \PY{k+kn}{import} \PY{n}{PCA}
+\PY{k+kn}{import} \PY{n+nn}{os}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k+kn}{import} \PY{n}{KMeans}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Generate the Data Matrix and the Label
+vector}\label{generate-the-data-matrix-and-the-label-vector}
+
+Read data into torch.Tensor
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{torch}\PY{o}{.}\PY{n}{set\PYZus{}default\PYZus{}dtype}\PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Specify the top\PYZhy{}level folder}
+\PY{n}{top\PYZus{}folder} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data}\PY{l+s+s2}{\PYZdq{}}
+
+\PY{c+c1}{\PYZsh{} Initialize an empty list to store flattened arrays}
+\PY{n}{flattened\PYZus{}arrays} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{9120}\PY{p}{)}
+\PY{n}{example\PYZus{}cnt}\PY{p}{,} \PY{n}{example\PYZus{}label} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}
+
+\PY{k}{for} \PY{n}{root}\PY{p}{,} \PY{n}{dirs}\PY{p}{,} \PY{n}{files} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{walk}\PY{p}{(}\PY{n}{top\PYZus{}folder}\PY{p}{)}\PY{p}{:}
+    \PY{k}{for} \PY{n}{file} \PY{o+ow}{in} \PY{n}{files}\PY{p}{:}
+        \PY{k}{if} \PY{n}{file}\PY{o}{.}\PY{n}{endswith}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{.txt}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+            \PY{n}{file\PYZus{}path} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{n}{file}\PY{p}{)}
+            \PY{n}{lines} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+            \PY{k}{with} \PY{n+nb}{open}\PY{p}{(}\PY{n}{file\PYZus{}path}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{as} \PY{n}{file}\PY{p}{:}
+                \PY{k}{for} \PY{n}{line} \PY{o+ow}{in} \PY{n}{file}\PY{p}{:}
+                    \PY{n}{values} \PY{o}{=} \PY{n}{line}\PY{o}{.}\PY{n}{strip}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                    \PY{n}{lines}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{[}\PY{n+nb}{float}\PY{p}{(}\PY{n}{value}\PY{p}{)} \PY{k}{for} \PY{n}{value} \PY{o+ow}{in} \PY{n}{values}\PY{p}{]}\PY{p}{)}
+
+            \PY{n}{flattened\PYZus{}array} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{tensor}\PY{p}{(}\PY{n}{lines}\PY{p}{)}\PY{o}{.}\PY{n}{view}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+            \PY{n}{labels}\PY{p}{[}\PY{n}{example\PYZus{}cnt}\PY{p}{]} \PY{o}{=} \PY{n}{example\PYZus{}label}
+
+            \PY{n}{flattened\PYZus{}arrays}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{flattened\PYZus{}array}\PY{p}{)}
+            \PY{n}{example\PYZus{}cnt} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+            \PY{k}{if} \PY{n}{example\PYZus{}cnt} \PY{o}{\PYZpc{}} \PY{l+m+mi}{480} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+                \PY{n}{example\PYZus{}label} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+\PY{n}{all\PYZus{}data} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{stack}\PY{p}{(}\PY{n}{flattened\PYZus{}arrays}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} all\PYZus{}data\PYZus{}1 is a 2D tensor of shape (9120, 45) containing the mean of each column in each segment resulting in 45 features for each data point}
+\PY{n}{all\PYZus{}data\PYZus{}1} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{all\PYZus{}data}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{45}\PY{p}{)}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{all\PYZus{}data\PYZus{}1}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+    \PY{n}{all\PYZus{}data\PYZus{}1}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{all\PYZus{}data}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{i} \PY{o}{*} \PY{l+m+mi}{125} \PY{p}{:} \PY{n}{i} \PY{o}{*} \PY{l+m+mi}{125} \PY{o}{+} \PY{l+m+mi}{125}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+    
+\PY{c+c1}{\PYZsh{} all\PYZus{}data\PYZus{}2 is a 2D tensor of shape (9120, 5625) containing 45 x 125 features for each data point}
+\PY{n}{all\PYZus{}data\PYZus{}2} \PY{o}{=} \PY{n}{all\PYZus{}data}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Split the Dataset into Training and Test
+sets}\label{split-the-dataset-into-training-and-test-sets}
+
+Split dataset into training and test data
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{training\PYZus{}indices} \PY{o}{=} \PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{all\PYZus{}data}\PY{p}{)}\PY{p}{)} \PY{k}{if} \PY{p}{(}\PY{n}{i} \PY{o}{\PYZpc{}} \PY{l+m+mi}{60}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{l+m+mi}{48}\PY{p}{]}
+\PY{n}{test\PYZus{}indices} \PY{o}{=} \PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{all\PYZus{}data}\PY{p}{)}\PY{p}{)} \PY{k}{if} \PY{p}{(}\PY{n}{i} \PY{o}{\PYZpc{}} \PY{l+m+mi}{60}\PY{p}{)} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{48}\PY{p}{]}
+
+\PY{n}{training\PYZus{}data\PYZus{}1} \PY{o}{=} \PY{n}{all\PYZus{}data\PYZus{}1}\PY{p}{[}\PY{n}{training\PYZus{}indices}\PY{p}{]}
+\PY{n}{test\PYZus{}data\PYZus{}1} \PY{o}{=} \PY{n}{all\PYZus{}data\PYZus{}1}\PY{p}{[}\PY{n}{test\PYZus{}indices}\PY{p}{]}
+
+\PY{n}{training\PYZus{}data\PYZus{}2} \PY{o}{=} \PY{n}{all\PYZus{}data\PYZus{}2}\PY{p}{[}\PY{n}{training\PYZus{}indices}\PY{p}{]}
+\PY{n}{test\PYZus{}data\PYZus{}2} \PY{o}{=} \PY{n}{all\PYZus{}data\PYZus{}2}\PY{p}{[}\PY{n}{test\PYZus{}indices}\PY{p}{]}
+
+\PY{n}{training\PYZus{}labels} \PY{o}{=} \PY{n}{labels}\PY{p}{[}\PY{n}{training\PYZus{}indices}\PY{p}{]}
+\PY{n}{test\PYZus{}labels} \PY{o}{=} \PY{n}{labels}\PY{p}{[}\PY{n}{test\PYZus{}indices}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsubsection{Reduced data using PCA}\label{reduced-data-using-pca}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{)}
+\PY{n}{pca}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{training\PYZus{}data\PYZus{}2}\PY{p}{)}
+\PY{n}{training\PYZus{}data\PYZus{}2\PYZus{}reduced} \PY{o}{=} \PY{n}{Tensor}\PY{p}{(}\PY{n}{pca}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{training\PYZus{}data\PYZus{}2}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{pca}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}2}\PY{p}{)}
+\PY{n}{test\PYZus{}data\PYZus{}2\PYZus{}reduced} \PY{o}{=} \PY{n}{Tensor}\PY{p}{(}\PY{n}{pca}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}2}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{K-Means Algorithm}\label{k-means-algorithm}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{k\PYZus{}means}\PY{p}{(}\PY{n}{points}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{k}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{relative\PYZus{}error}\PY{p}{:} \PY{n+nb}{float} \PY{o}{=} \PY{l+m+mf}{1e\PYZhy{}6}\PY{p}{,} \PY{n}{max\PYZus{}iterations}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{1000}\PY{p}{)}\PY{p}{:}
+    \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{points}\PY{p}{)}
+    \PY{n}{means} \PY{o}{=} \PY{n}{points}\PY{p}{[}\PY{n}{torch}\PY{o}{.}\PY{n}{randperm}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{n}{k}\PY{p}{]}\PY{p}{]}
+
+    \PY{n}{error} \PY{o}{=} \PY{l+m+mi}{1}
+    \PY{n}{iterations} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{k}{while} \PY{n}{error} \PY{o}{\PYZgt{}} \PY{n}{relative\PYZus{}error} \PY{o+ow}{and} \PY{n}{iterations} \PY{o}{\PYZlt{}} \PY{n}{max\PYZus{}iterations}\PY{p}{:}
+        \PY{n}{iterations} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+        \PY{n}{distances} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{cdist}\PY{p}{(}\PY{n}{points}\PY{p}{,} \PY{n}{means}\PY{p}{)}
+        \PY{n}{closest\PYZus{}means} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{distances}\PY{p}{,} \PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+
+        \PY{n}{new\PYZus{}means} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{means}\PY{p}{)}
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{k}\PY{p}{)}\PY{p}{:}
+            \PY{n}{new\PYZus{}means}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{points}\PY{p}{[}\PY{n}{closest\PYZus{}means} \PY{o}{==} \PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+
+        \PY{n}{error} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{means} \PY{o}{\PYZhy{}} \PY{n}{new\PYZus{}means}\PY{p}{)} \PY{o}{/} \PY{n}{torch}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{new\PYZus{}means}\PY{p}{)}
+
+        \PY{n}{means} \PY{o}{=} \PY{n}{new\PYZus{}means}
+
+    \PY{k}{return} \PY{n}{means}\PY{p}{,} \PY{n}{closest\PYZus{}means}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \subsection{K-Ways normalised Cut
+Algorithm}\label{k-ways-normalised-cut-algorithm}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{KNN\PYZus{}similarity\PYZus{}graph}\PY{p}{(}\PY{n}{data}\PY{p}{,}\PY{n}{k}\PY{p}{)}\PY{p}{:}
+    \PY{n}{n} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    \PY{n}{sim\PYZus{}graph} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+    \PY{n}{distances} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{cdist}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{n}{data}\PY{p}{)}
+    \PY{n}{distances}\PY{o}{.}\PY{n}{view}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{n}{distances}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n+nb}{float}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inf}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{indices} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{topk}\PY{p}{(}\PY{n}{distances}\PY{p}{,} \PY{n}{k}\PY{p}{,} \PY{n}{largest}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+    \PY{n}{row\PYZus{}indices} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{o}{.}\PY{n}{unsqueeze}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{expand}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+    \PY{n}{sim\PYZus{}graph}\PY{p}{[}\PY{n}{row\PYZus{}indices}\PY{p}{,}\PY{n}{indices}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+        
+    \PY{k}{return} \PY{n}{sim\PYZus{}graph}  
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{rbf\PYZus{}graph}\PY{p}{(}\PY{n}{data}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{gamma}\PY{p}{:} \PY{n+nb}{float}\PY{p}{)}\PY{p}{:}
+    
+    \PY{k}{return} \PY{n}{torch}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{gamma}\PY{o}{*}\PY{n}{torch}\PY{o}{.}\PY{n}{cdist}\PY{p}{(}\PY{n}{data}\PY{p}{,}\PY{n}{data}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{k\PYZus{}ways\PYZus{}normalised\PYZus{}cut}\PY{p}{(}\PY{n}{a}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{k}\PY{p}{:} \PY{n+nb}{int}\PY{p}{)}\PY{p}{:}
+    \PY{n}{delta}\PY{p}{,}\PY{n}{inverse\PYZus{}delta} \PY{o}{=} \PY{n}{a}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{diag}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{k+kc}{None}
+    \PY{k}{if} \PY{n}{torch}\PY{o}{.}\PY{n}{allclose}\PY{p}{(}\PY{n}{a}\PY{p}{,} \PY{n}{a}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{p}{:} \PY{n}{inverse\PYZus{}delta} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{diag}\PY{p}{(}\PY{l+m+mi}{1} \PY{o}{/} \PY{n}{delta}\PY{o}{.}\PY{n}{diag}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+    \PY{k}{else}\PY{p}{:} \PY{n}{inverse\PYZus{}delta} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{inverse}\PY{p}{(}\PY{n}{delta}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Replace inf and nan values with 0}
+    \PY{n}{inverse\PYZus{}delta}\PY{o}{.}\PY{n}{masked\PYZus{}fill\PYZus{}}\PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{inverse\PYZus{}delta}\PY{p}{)} \PY{o}{|} \PY{n}{torch}\PY{o}{.}\PY{n}{isinf}\PY{p}{(}\PY{n}{inverse\PYZus{}delta}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}
+
+    \PY{n}{l\PYZus{}a} \PY{o}{=} \PY{n}{inverse\PYZus{}delta} \PY{o}{@} \PY{p}{(}\PY{n}{delta} \PY{o}{\PYZhy{}} \PY{n}{a}\PY{p}{)}
+        
+    \PY{n}{eigen\PYZus{}values}\PY{p}{,} \PY{n}{eigen\PYZus{}vectors} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{eig}\PY{p}{(}\PY{n}{l\PYZus{}a}\PY{p}{)}
+    \PY{n}{eigen\PYZus{}values} \PY{o}{=} \PY{n}{eigen\PYZus{}values}\PY{o}{.}\PY{n}{real}
+    \PY{n}{eigen\PYZus{}vectors} \PY{o}{=} \PY{n}{eigen\PYZus{}vectors}\PY{o}{.}\PY{n}{real}
+
+    \PY{n}{indices} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{n}{eigen\PYZus{}values}\PY{p}{)}
+    \PY{n}{eigen\PYZus{}values} \PY{o}{=} \PY{n}{eigen\PYZus{}values}\PY{p}{[}\PY{n}{indices}\PY{p}{]}
+    \PY{n}{eigen\PYZus{}vectors} \PY{o}{=} \PY{n}{eigen\PYZus{}vectors}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{indices}\PY{p}{]}
+
+    \PY{n}{u} \PY{o}{=} \PY{n}{eigen\PYZus{}vectors}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{p}{:}\PY{n}{k}\PY{p}{]}
+    \PY{n}{y} \PY{o}{=} \PY{n}{u} \PY{o}{/} \PY{n}{torch}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{keepdim}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{y}\PY{o}{.}\PY{n}{masked\PYZus{}fill\PYZus{}}\PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{isnan}\PY{p}{(}\PY{n}{y}\PY{p}{)} \PY{o}{|} \PY{n}{torch}\PY{o}{.}\PY{n}{isinf}\PY{p}{(}\PY{n}{y}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Create KMeans object}
+    \PY{n}{kmeans} \PY{o}{=} \PY{n}{KMeans}\PY{p}{(}\PY{n}{n\PYZus{}clusters}\PY{o}{=}\PY{n}{k}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Fit the model to the data}
+    \PY{n}{kmeans}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{y}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Predict the cluster labels}
+    \PY{n}{centroids} \PY{o}{=} \PY{n}{Tensor}\PY{p}{(}\PY{n}{kmeans}\PY{o}{.}\PY{n}{cluster\PYZus{}centers\PYZus{}}\PY{p}{)}
+    \PY{n}{predicted\PYZus{}labels} \PY{o}{=} \PY{n}{Tensor}\PY{p}{(}\PY{n}{kmeans}\PY{o}{.}\PY{n}{labels\PYZus{}}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} centroids, predicted\PYZus{}labels = k\PYZus{}means(y, k)}
+
+    \PY{k}{return} \PY{n}{centroids}\PY{p}{,}\PY{n}{predicted\PYZus{}labels}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Evaluation fucntions}\label{evaluation-fucntions}
+
+    \paragraph{Precision}\label{precision}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{precision}\PY{p}{(}\PY{n}{clustering}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{)}\PY{p}{:}
+    \PY{n}{cluster\PYZus{}labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{clustering}\PY{p}{)}
+
+    \PY{n}{total\PYZus{}precision} \PY{o}{=} \PY{l+m+mf}{0.0}
+
+    \PY{k}{for} \PY{n}{cluster\PYZus{}label} \PY{o+ow}{in} \PY{n}{cluster\PYZus{}labels}\PY{p}{:}
+        \PY{n}{cluster\PYZus{}indices} \PY{o}{=} \PY{p}{(}\PY{n}{clustering} \PY{o}{==} \PY{n}{cluster\PYZus{}label}\PY{p}{)}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{p}{)}
+
+        \PY{n}{actual\PYZus{}cluster\PYZus{}labels} \PY{o}{=} \PY{n}{labels}\PY{p}{[}\PY{n}{cluster\PYZus{}indices}\PY{p}{]}
+        \PY{n}{mode} \PY{o}{=} \PY{n}{actual\PYZus{}cluster\PYZus{}labels}\PY{o}{.}\PY{n}{mode}\PY{p}{(}\PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{total\PYZus{}precision} \PY{o}{+}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{actual\PYZus{}cluster\PYZus{}labels}\PY{p}{[}\PY{n}{actual\PYZus{}cluster\PYZus{}labels} \PY{o}{==} \PY{n}{mode}\PY{p}{]}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{total\PYZus{}precision} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{clustering}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{recall}\label{recall}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{contingency\PYZus{}matrix}\PY{p}{(}\PY{n}{actual\PYZus{}labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{predicted\PYZus{}labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{)}\PY{p}{:}
+    \PY{n}{n\PYZus{}samples} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{actual\PYZus{}labels}\PY{p}{)}
+
+    \PY{n}{n\PYZus{}actual} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{actual\PYZus{}labels}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{n\PYZus{}predicted} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{predicted\PYZus{}labels}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{1}
+    \PY{n}{matrix} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{n\PYZus{}actual}\PY{p}{,} \PY{n}{n\PYZus{}predicted}\PY{p}{)}
+
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}samples}\PY{p}{)}\PY{p}{:}
+        \PY{n}{matrix}\PY{p}{[}\PY{n+nb}{int}\PY{p}{(}\PY{n}{actual\PYZus{}labels}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n+nb}{int}\PY{p}{(}\PY{n}{predicted\PYZus{}labels}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+        
+    \PY{k}{return} \PY{n}{matrix}
+
+
+\PY{k}{def} \PY{n+nf}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{contingency\PYZus{}matrix}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{n}\PY{p}{:} \PY{n+nb}{int}\PY{p}{)}\PY{p}{:}
+    \PY{n}{tp} \PY{o}{=} \PY{l+m+mf}{0.5} \PY{o}{*} \PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{contingency\PYZus{}matrix} \PY{o}{*}\PY{o}{*} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{dim}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{n}\PY{p}{)}
+
+    \PY{n}{column\PYZus{}sum} \PY{o}{=} \PY{n}{contingency\PYZus{}matrix}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{n}{fp} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{column\PYZus{}sum} \PY{o}{*} \PY{p}{(}\PY{n}{column\PYZus{}sum} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{tp}
+
+    \PY{n}{row\PYZus{}sum} \PY{o}{=} \PY{n}{contingency\PYZus{}matrix}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{fn} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{row\PYZus{}sum} \PY{o}{*} \PY{p}{(}\PY{n}{row\PYZus{}sum} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{tp}
+
+    \PY{n}{tn} \PY{o}{=} \PY{n}{n} \PY{o}{*} \PY{p}{(}\PY{n}{n} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{n}{tp} \PY{o}{\PYZhy{}} \PY{n}{fp} \PY{o}{\PYZhy{}} \PY{n}{fn}
+
+    \PY{k}{return} \PY{n}{tp}\PY{p}{,} \PY{n}{fp}\PY{p}{,} \PY{n}{tn}\PY{p}{,} \PY{n}{fn}
+
+
+\PY{k}{def} \PY{n+nf}{recall}\PY{p}{(}\PY{n}{predicted\PYZus{}labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{actual\PYZus{}labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{)}\PY{p}{:}
+    \PY{n}{contingency} \PY{o}{=} \PY{n}{contingency\PYZus{}matrix}\PY{p}{(}\PY{n}{actual\PYZus{}labels}\PY{p}{,} \PY{n}{predicted\PYZus{}labels}\PY{p}{)}
+    \PY{n}{tp}\PY{p}{,} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{fn} \PY{o}{=} \PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{contingency}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{actual\PYZus{}labels}\PY{p}{)}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{tp} \PY{o}{/} \PY{p}{(}\PY{n}{tp} \PY{o}{+} \PY{n}{fn}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{F1 score}\label{f1-score}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{f1\PYZus{}score}\PY{p}{(}\PY{n}{clustering}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{)}\PY{p}{:}
+    \PY{n}{cluster\PYZus{}labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{clustering}\PY{p}{)}
+
+    \PY{n}{total\PYZus{}f} \PY{o}{=} \PY{l+m+mf}{0.0}
+
+    \PY{k}{for} \PY{n}{cluster\PYZus{}label} \PY{o+ow}{in} \PY{n}{cluster\PYZus{}labels}\PY{p}{:}
+        \PY{n}{cluster\PYZus{}indices} \PY{o}{=} \PY{p}{(}\PY{n}{clustering} \PY{o}{==} \PY{n}{cluster\PYZus{}label}\PY{p}{)}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{p}{)}
+
+        \PY{n}{actual\PYZus{}cluster\PYZus{}labels} \PY{o}{=} \PY{n}{labels}\PY{p}{[}\PY{n}{cluster\PYZus{}indices}\PY{p}{]}
+        \PY{n}{mode} \PY{o}{=} \PY{n}{actual\PYZus{}cluster\PYZus{}labels}\PY{o}{.}\PY{n}{mode}\PY{p}{(}\PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+
+        \PY{n}{precision} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{actual\PYZus{}cluster\PYZus{}labels}\PY{p}{[}\PY{n}{actual\PYZus{}cluster\PYZus{}labels} \PY{o}{==} \PY{n}{mode}\PY{p}{]}\PY{p}{)} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cluster\PYZus{}indices}\PY{p}{)}
+        \PY{n}{recall} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{actual\PYZus{}cluster\PYZus{}labels}\PY{p}{[}\PY{n}{actual\PYZus{}cluster\PYZus{}labels} \PY{o}{==} \PY{n}{mode}\PY{p}{]}\PY{p}{)} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{labels}\PY{p}{[}\PY{n}{labels} \PY{o}{==} \PY{n}{mode}\PY{p}{]}\PY{p}{)}
+        \PY{n}{total\PYZus{}f} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{precision} \PY{o}{*} \PY{n}{recall} \PY{o}{/} \PY{p}{(}\PY{n}{precision} \PY{o}{+} \PY{n}{recall}\PY{p}{)}
+
+    \PY{k}{return} \PY{n}{total\PYZus{}f} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cluster\PYZus{}labels}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \paragraph{Conditional entropy}\label{conditional-entropy}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{clustering}\PY{p}{:} \PY{n}{Tensor}\PY{p}{,} \PY{n}{labels}\PY{p}{:} \PY{n}{Tensor}\PY{p}{)}\PY{p}{:}
+    \PY{n}{cluster\PYZus{}labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{clustering}\PY{p}{)}
+    \PY{n}{partition\PYZus{}labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{labels}\PY{p}{)}
+
+    \PY{n}{total\PYZus{}entropy} \PY{o}{=} \PY{l+m+mf}{0.0}
+    \PY{k}{for} \PY{n}{cluster\PYZus{}label} \PY{o+ow}{in} \PY{n}{cluster\PYZus{}labels}\PY{p}{:}
+        \PY{n}{cluster\PYZus{}entropy} \PY{o}{=} \PY{l+m+mf}{0.0}
+        \PY{n}{cluster\PYZus{}indices} \PY{o}{=} \PY{p}{(}\PY{n}{clustering} \PY{o}{==} \PY{n}{cluster\PYZus{}label}\PY{p}{)}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{p}{)}
+
+        \PY{k}{for} \PY{n}{partition\PYZus{}label} \PY{o+ow}{in} \PY{n}{partition\PYZus{}labels}\PY{p}{:}
+            \PY{n}{partition\PYZus{}indices} \PY{o}{=} \PY{p}{(}\PY{n}{labels} \PY{o}{==} \PY{n}{partition\PYZus{}label}\PY{p}{)}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{p}{)}
+            \PY{n}{cluster\PYZus{}in\PYZus{}partition\PYZus{}count} \PY{o}{=} \PY{p}{(}\PY{n}{clustering}\PY{p}{[}\PY{n}{partition\PYZus{}indices}\PY{p}{]} \PY{o}{==} \PY{n}{cluster\PYZus{}label}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+            \PY{n}{cluster\PYZus{}entropy} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{cluster\PYZus{}in\PYZus{}partition\PYZus{}count} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cluster\PYZus{}indices}\PY{p}{)} \PY{o}{*} \PY{n}{torch}\PY{o}{.}\PY{n}{log2}\PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{Tensor}\PY{p}{(}\PY{p}{[}\PY{n}{cluster\PYZus{}in\PYZus{}partition\PYZus{}count} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cluster\PYZus{}indices}\PY{p}{)}\PY{p}{]}\PY{p}{)}\PY{p}{)} \PY{k}{if} \PY{n}{cluster\PYZus{}in\PYZus{}partition\PYZus{}count} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}        
+        
+        \PY{n}{total\PYZus{}entropy} \PY{o}{+}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cluster\PYZus{}indices}\PY{p}{)} \PY{o}{/} \PY{n+nb}{len}\PY{p}{(}\PY{n}{labels}\PY{p}{)} \PY{o}{*} \PY{n}{cluster\PYZus{}entropy}
+
+    \PY{k}{return} \PY{n}{total\PYZus{}entropy}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \section{Clustering Using K-Means and Normalized
+Cut}\label{clustering-using-k-means-and-normalized-cut}
+
+    \subsubsection{Solution 1: Taking the mean of each column in each
+segment for each data
+point}\label{solution-1-taking-the-mean-of-each-column-in-each-segment-for-each-data-point}
+
+    \subparagraph{Using kmeans}\label{using-kmeans}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{113}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ks} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{13}\PY{p}{,} \PY{l+m+mi}{19}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,}\PY{l+m+mi}{38}\PY{p}{]}
+\PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{ks}\PY{p}{:}
+    \PY{n}{centroids}\PY{p}{,}\PY{n}{training\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{k\PYZus{}means}\PY{p}{(}\PY{n}{training\PYZus{}data\PYZus{}1}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+    \PY{n}{test\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{empty\PYZus{}like}\PY{p}{(}\PY{n}{test\PYZus{}labels}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{torch}\PY{o}{.}\PY{n}{long}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,}\PY{n}{point} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}1}\PY{p}{)}\PY{p}{:}
+        \PY{n}{distances} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{point} \PY{o}{\PYZhy{}} \PY{n}{centroids}\PY{p}{,} \PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{distances}\PY{p}{)}
+    
+    \PY{n}{prec\PYZus{}train}     \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    \PY{n}{rec\PYZus{}train}      \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    \PY{n}{f\PYZus{}score\PYZus{}train}  \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    \PY{n}{entropy\PYZus{}train}  \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    
+    \PY{n}{prec\PYZus{}test}    \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    \PY{n}{rec\PYZus{}test}     \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    \PY{n}{f\PYZus{}score\PYZus{}test} \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    \PY{n}{entropy\PYZus{}test}  \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} For k = }\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{training:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for training set = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec\PYZus{}train}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for training set = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec\PYZus{}train}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for training set = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score\PYZus{}train}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for training set= }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy\PYZus{}train}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}     
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec\PYZus{}test}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec\PYZus{}test}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score\PYZus{}test}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy\PYZus{}test}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+------ For k = 8 ------
+training:
+Precision for training set = 0.22930372807017543
+Recall for training set = 0.4881848060098026
+Fscore for training set = 0.1934170586164415
+Entropy for training set= 3.150761364192166
+test:
+Precision for test set = 0.22861842105263158
+Recall for test set = 0.4821445060018467
+Fscore for test set = 0.1892518812832141
+Entropy for test set = 3.1473447107732375
+------ For k = 13 ------
+training:
+Precision for training set = 0.2735745614035088
+Recall for training set = 0.45972470340341715
+Fscore for training set = 0.1929711768982569
+Entropy for training set= 2.9612778801742037
+test:
+Precision for test set = 0.2631578947368421
+Recall for test set = 0.45090027700831026
+Fscore for test set = 0.18049885992695217
+Entropy for test set = 2.994771398422983
+------ For k = 19 ------
+training:
+Precision for training set = 0.2974232456140351
+Recall for training set = 0.33198061243186294
+Fscore for training set = 0.18951288596348762
+Entropy for training set= 2.8459469469925933
+test:
+Precision for test set = 0.27960526315789475
+Recall for test set = 0.3311634349030471
+Fscore for test set = 0.18461182102459173
+Entropy for test set = 2.8373268477357594
+------ For k = 28 ------
+training:
+Precision for training set = 0.31661184210526316
+Recall for training set = 0.2578250251935321
+Fscore for training set = 0.1856180759519761
+Entropy for training set= 2.6638988491583566
+test:
+Precision for test set = 0.31469298245614036
+Recall for test set = 0.26188827331486614
+Fscore for test set = 0.18738902423917084
+Entropy for test set = 2.5900846965996314
+------ For k = 38 ------
+training:
+Precision for training set = 0.39418859649122806
+Recall for training set = 0.2284566671247309
+Fscore for training set = 0.20093379991854274
+Entropy for training set= 2.3857082459831958
+test:
+Precision for test set = 0.3843201754385965
+Recall for test set = 0.2315904893813481
+Fscore for test set = 0.20035347685425572
+Entropy for test set = 2.3665942213263893
+    \end{Verbatim}
+
+    \subparagraph{Using Normalized Cut}\label{using-normalized-cut}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{alpha}\PY{p}{,}\PY{n}{k} \PY{o}{=} \PY{l+m+mf}{0.1}\PY{p}{,}\PY{l+m+mi}{19}
+
+\PY{c+c1}{\PYZsh{}sim\PYZus{}graph = rbf\PYZus{}graph(test\PYZus{}data\PYZus{}1, alpha)}
+\PY{n}{sim\PYZus{}graph} \PY{o}{=} \PY{n}{KNN\PYZus{}similarity\PYZus{}graph}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}1}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{centroids}\PY{p}{,}\PY{n}{test\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{k\PYZus{}ways\PYZus{}normalised\PYZus{}cut}\PY{p}{(}\PY{n}{sim\PYZus{}graph}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+    
+\PY{n}{prec}    \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{rec}     \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{f\PYZus{}score} \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{entropy} \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Precision for k:19 = 0.3344298245614035
+Recall for k:19 = 0.2443674976915974
+Fscore for k:19 = 0.3328502748492976
+Entropy for k:19 = 2.5005078562956684
+    \end{Verbatim}
+
+    \subsubsection{Solution 2: Flattening all the features together for each
+data
+point}\label{solution-2-flattening-all-the-features-together-for-each-data-point}
+
+    \subparagraph{Using kmeans}\label{using-kmeans}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{114}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ks} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{13}\PY{p}{,} \PY{l+m+mi}{19}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,}\PY{l+m+mi}{38}\PY{p}{]}
+\PY{n}{centroids}\PY{p}{,}\PY{n}{training\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{k+kc}{None}\PY{p}{,}\PY{k+kc}{None}
+\PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n}{ks}\PY{p}{:}
+    \PY{n}{centroids}\PY{p}{,}\PY{n}{training\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{k\PYZus{}means}\PY{p}{(}\PY{n}{training\PYZus{}data\PYZus{}2\PYZus{}reduced}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+    
+    \PY{n}{test\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{empty\PYZus{}like}\PY{p}{(}\PY{n}{test\PYZus{}labels}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{torch}\PY{o}{.}\PY{n}{long}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,}\PY{n}{point} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}2\PYZus{}reduced}\PY{p}{)}\PY{p}{:}
+        \PY{n}{distances} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{point} \PY{o}{\PYZhy{}} \PY{n}{centroids}\PY{p}{,} \PY{n}{dim}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{distances}\PY{p}{)}
+        
+    \PY{n}{prec\PYZus{}train}     \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    \PY{n}{rec\PYZus{}train}      \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    \PY{n}{f\PYZus{}score\PYZus{}train}  \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    \PY{n}{entropy\PYZus{}train}  \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{training\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{training\PYZus{}labels}\PY{p}{)}
+    
+    \PY{n}{prec\PYZus{}test}    \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    \PY{n}{rec\PYZus{}test}     \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    \PY{n}{f\PYZus{}score\PYZus{}test} \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    \PY{n}{entropy\PYZus{}test}  \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} For k = }\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{training:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for training set = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec\PYZus{}train}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for training set = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec\PYZus{}train}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for training set = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score\PYZus{}train}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for training set= }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy\PYZus{}train}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}     
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec\PYZus{}test}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec\PYZus{}test}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score\PYZus{}test}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for test set = }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy\PYZus{}test}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+------ For k = 8 ------
+training:
+Precision for training set = 0.32140899122807015
+Recall for training set = 0.7234308437542943
+Fscore for training set = 0.24722184039224185
+Entropy for training set= 2.5221248885709384
+test:
+Precision for test set = 0.27028508771929827
+Recall for test set = 0.685387811634349
+Fscore for test set = 0.22514587733034058
+Entropy for test set = 2.6703336474780945
+------ For k = 13 ------
+training:
+Precision for training set = 0.38061951754385964
+Recall for training set = 0.5910767658375704
+Fscore for training set = 0.2683288237831322
+Entropy for training set= 2.290392241607976
+test:
+Precision for test set = 0.33497807017543857
+Recall for test set = 0.5798822714681441
+Fscore for test set = 0.23940930361108204
+Entropy for test set = 2.4266484048341783
+------ For k = 19 ------
+training:
+Precision for training set = 0.49917763157894735
+Recall for training set = 0.4785633102010902
+Fscore for training set = 0.3710778996591631
+Entropy for training set= 1.8843416426164439
+test:
+Precision for test set = 0.4479166666666667
+Recall for test set = 0.4583333333333333
+Fscore for test set = 0.3272703297427825
+Entropy for test set = 2.091418050904501
+------ For k = 28 ------
+training:
+Precision for training set = 0.5209703947368421
+Recall for training set = 0.4046625211854702
+Fscore for training set = 0.3608960164634376
+Entropy for training set= 1.7475111806102102
+test:
+Precision for test set = 0.45997807017543857
+Recall for test set = 0.4007733148661127
+Fscore for test set = 0.3116644152533625
+Entropy for test set = 2.0018586138195995
+------ For k = 38 ------
+training:
+Precision for training set = 0.5705866228070176
+Recall for training set = 0.3553776739498878
+Fscore for training set = 0.37633433885612944
+Entropy for training set= 1.5566305500433548
+test:
+Precision for test set = 0.5054824561403509
+Recall for test set = 0.34344413665743306
+Fscore for test set = 0.3190341914248035
+Entropy for test set = 1.7697984020572328
+    \end{Verbatim}
+
+    \subparagraph{Using Normalized Cut}\label{using-normalized-cut}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{115}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{alpha}\PY{p}{,}\PY{n}{k} \PY{o}{=} \PY{l+m+mf}{0.001}\PY{p}{,}\PY{l+m+mi}{19}
+
+\PY{c+c1}{\PYZsh{}sim\PYZus{}graph = rbf\PYZus{}graph(test\PYZus{}data\PYZus{}2\PYZus{}reduced, alpha)}
+\PY{n}{sim\PYZus{}graph} \PY{o}{=} \PY{n}{KNN\PYZus{}similarity\PYZus{}graph}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}2\PYZus{}reduced}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{centroids}\PY{p}{,}\PY{n}{test\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{k\PYZus{}ways\PYZus{}normalised\PYZus{}cut}\PY{p}{(}\PY{n}{sim\PYZus{}graph}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+    
+\PY{n}{prec}    \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{rec}     \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{f\PYZus{}score} \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{entropy} \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Precision for k:19 = 0.5060307017543859
+Recall for k:19 = 0.4137119113573407
+Fscore for k:19 = 0.36683126519124987
+Entropy for k:19 = 1.844753891319193
+    \end{Verbatim}
+
+    \section{Hierarchical clustering}\label{hierarchical-clustering}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{hierarchical\PYZus{}clustring}\PY{p}{(}\PY{n}{data}\PY{p}{,}\PY{n}{k}\PY{p}{)}\PY{p}{:}
+    \PY{n}{num\PYZus{}of\PYZus{}clusters} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{data}\PY{p}{)}
+    
+    \PY{n}{labels} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{num\PYZus{}of\PYZus{}clusters}\PY{p}{)}
+    \PY{n}{distances} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{cdist}\PY{p}{(}\PY{n}{data}\PY{p}{,}\PY{n}{data}\PY{p}{)}
+    \PY{n}{distances}\PY{o}{.}\PY{n}{fill\PYZus{}diagonal\PYZus{}}\PY{p}{(}\PY{n+nb}{float}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inf}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+    
+    \PY{k}{while}\PY{p}{(}\PY{n}{num\PYZus{}of\PYZus{}clusters} \PY{o}{\PYZgt{}} \PY{n}{k}\PY{p}{)}\PY{p}{:}
+        
+        \PY{c+c1}{\PYZsh{}get min distance between clusters}
+        \PY{n}{indices} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{argmin}\PY{p}{(}\PY{n}{distances}\PY{p}{)}
+        \PY{n}{row\PYZus{}index}\PY{p}{,} \PY{n}{col\PYZus{}index} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{unravel\PYZus{}index}\PY{p}{(}\PY{n}{indices}\PY{p}{,} \PY{n}{distances}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+       
+        \PY{c+c1}{\PYZsh{} get the elements of the two clusters obtained from step above}
+        \PY{n}{cluster1} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{n}{labels} \PY{o}{==} \PY{n}{labels}\PY{p}{[}\PY{n}{row\PYZus{}index}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+        \PY{n}{cluster2} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{nonzero}\PY{p}{(}\PY{n}{labels} \PY{o}{==} \PY{n}{labels}\PY{p}{[}\PY{n}{col\PYZus{}index}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Apply the mask to replace the labels to make them one cluster}
+        \PY{n}{labels}\PY{p}{[}\PY{n}{cluster1}\PY{p}{]} \PY{o}{=} \PY{n}{labels}\PY{p}{[}\PY{n}{col\PYZus{}index}\PY{p}{]}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}
+        
+        \PY{n}{grouped\PYZus{}cluster} \PY{o}{=} \PY{n}{torch}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{n}{torch}\PY{o}{.}\PY{n}{cat}\PY{p}{(}\PY{p}{(}\PY{n}{cluster1}\PY{p}{,} \PY{n}{cluster2}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Broadcast the row indices to match the shape of the column indices}
+        \PY{n}{broadcasted\PYZus{}rows\PYZus{}indices} \PY{o}{=} \PY{n}{grouped\PYZus{}cluster}\PY{o}{.}\PY{n}{unsqueeze}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{expand}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{grouped\PYZus{}cluster}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Set values using broadcasted indices}
+        \PY{n}{distances}\PY{p}{[}\PY{n}{broadcasted\PYZus{}rows\PYZus{}indices}\PY{p}{,} \PY{n}{grouped\PYZus{}cluster}\PY{p}{]} \PY{o}{=} \PY{n+nb}{float}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inf}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{num\PYZus{}of\PYZus{}clusters}\PY{o}{\PYZhy{}}\PY{o}{=}\PY{l+m+mi}{1}
+        
+    \PY{k}{return} \PY{n}{labels}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{k} \PY{o}{=} \PY{l+m+mi}{19}
+\PY{n}{test\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{hierarchical\PYZus{}clustring}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}1}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+
+\PY{n}{prec}    \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{rec}     \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{f\PYZus{}score} \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{entropy} \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Precision for k:19 = 0.06304824561403509
+Recall for k:19 = 0.9802746999076639
+Fscore for k:19 = 0.025912171811011103
+Entropy for k:19 = 4.2028529319221
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{116}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{k} \PY{o}{=} \PY{l+m+mi}{19}
+\PY{n}{test\PYZus{}predicted\PYZus{}labels} \PY{o}{=} \PY{n}{hierarchical\PYZus{}clustring}\PY{p}{(}\PY{n}{test\PYZus{}data\PYZus{}2\PYZus{}reduced}\PY{p}{,}\PY{n}{k}\PY{p}{)}
+
+\PY{n}{prec}    \PY{o}{=} \PY{n}{precision}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{rec}     \PY{o}{=} \PY{n}{recall}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{f\PYZus{}score} \PY{o}{=} \PY{n}{f1\PYZus{}score}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+\PY{n}{entropy} \PY{o}{=} \PY{n}{conditional\PYZus{}entropy}\PY{p}{(}\PY{n}{test\PYZus{}predicted\PYZus{}labels}\PY{p}{,}\PY{n}{test\PYZus{}labels}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Precision for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{prec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Recall for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{rec}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fscore for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{f\PYZus{}score}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}  
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entropy for k:}\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}}\PY{n}{entropy}\PY{o}{.}\PY{n}{item}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Precision for k:19 = 0.12828947368421054
+Recall for k:19 = 0.959960757156048
+Fscore for k:19 = 0.11003390808171278
+Entropy for k:19 = 3.850657794069117
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
