@@ -1,2 +1,3 @@
 /data/Images/*
 !/data/Images/.gitkeep
+*.npy
